@@ -1,0 +1,14 @@
+{
+  "require": {
+    "php": "^7.0.0",
+    "abraham/twitteroauth": "^0.6.3",
+    "hrn4n/magic": "^1.1",
+    "vlucas/phpdotenv": "^2.2"
+  },
+  
+  "autoload": {
+    "psr-4": {
+      "Luz\\": "src/"
+    }
+  }
+}
