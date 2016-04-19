@@ -32,7 +32,7 @@ class Tweet
   *
   * @var array
   */
-  protected $urls;
+  protected $urls = [];
   
   public function getText(): string
   {

@@ -9,10 +9,10 @@
 namespace Luz\Twitter\Tweet;
 
 /**
-* Tweet factory interface
+* Tweet Builder interface
 */
-interface TweetFactoryInterface
+interface TweetBuilderInterface
 {
-  public static function createFromArray(array $src): Tweet;
-  public static function createFromObject(\StdClass $src): Tweet;
+  public static function buildFromArray(array $src): Tweet;
+  public static function buildFromObject(\StdClass $src): Tweet;
 }

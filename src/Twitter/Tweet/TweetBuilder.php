@@ -11,7 +11,7 @@ namespace Luz\Twitter\Tweet;
 /**
  * Tweet builder
  */
-class TweetBuilder implements TweetFactoryInterface
+class TweetBuilder implements TweetBuilderInterface
 {
 
   /**
@@ -32,7 +32,7 @@ class TweetBuilder implements TweetFactoryInterface
     return array_map(function ($url)
     {
       
-      return $url['expanded_url'];
+      return $url->{'expanded_url'};
       
     }, $rawUrls);
   }
@@ -61,8 +61,8 @@ class TweetBuilder implements TweetFactoryInterface
     $tweet = $tweet->setAuthor($src->user->screen_name)
                    ->setText($src->text);
                    
-    if(!empty($src->urls)) {
-      $tweet->setUrls(self::extractExpandedUrls($src->urls));
+    if(!empty($src->entities->urls)) {
+      $tweet->setUrls(self::extractExpandedUrls($src->entities->urls));
     }               
     
     return $tweet;
