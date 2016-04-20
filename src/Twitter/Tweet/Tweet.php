@@ -11,7 +11,7 @@ namespace Luz\Twitter\Tweet;
 /**
  * Tweet entity
  */
-class Tweet
+class Tweet implements \JsonSerializable
 {
   /**
   * The tweet's text contents
@@ -34,6 +34,18 @@ class Tweet
   */
   protected $urls = [];
   
+  
+  /**
+  * serialize the tweet
+  */
+  public function jsonSerialize()
+  {
+    return [
+      'text'   => $this->getText(),
+      'author' => $this->getAuthor(),
+    ];
+  }
+  
   public function getText(): string
   {
     return $this->text;
@@ -41,8 +53,8 @@ class Tweet
   
   public function setText(string $text)
   {
-    $this->text = $text;
-    
+    $this->text = str_replace("@LMOTTAD", "", $text);
+
     return $this;
   }
   

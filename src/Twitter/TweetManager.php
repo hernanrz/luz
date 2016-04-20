@@ -80,7 +80,7 @@ class TweetManager
   *
   * @return Timeline
   */
-  public function getTimeline(string $screenName, int $count = 25): Timeline
+  public function getTimeline(string $screenName, int $count = 40): Timeline
   {
     $timeline = new Timeline();
     

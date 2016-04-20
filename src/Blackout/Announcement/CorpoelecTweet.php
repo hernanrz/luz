@@ -9,9 +9,36 @@
 namespace Luz\Blackout\Announcement;
 
 use Luz\Twitter\Tweet\Tweet;
+use Luz\TwitLonger\PostLoader;
 
 class CorpoelecTweet extends Tweet
 {
+  /**
+  * @var string
+  */
+  protected $fullText;
+  
+  /**
+  * Get complete corpoelec announcement
+  *
+  * @return string
+  */
+  public function getText(): string
+  {
+    // Check if post is a twitlonger post, if so return the full text
+    if($this->isTruncated()) {
+      // Get full text if it hasn't been loaded before
+      if(null === $this->fullText) {
+        $post = PostLoader::loadFromShortUrl($this->urls[0]);
+        $this->fullText = $post->getText();
+      }
+      
+      return $this->fullText;
+    }
+    
+    return $this->text;
+  }
+  
   /**
   * Checks whether the tweet is complete or if there is a full story posted 
   * somewhere else
@@ -20,7 +47,7 @@ class CorpoelecTweet extends Tweet
   */
   public function isTruncated(): bool
   {
-    return $this->contains("(cont)") && $this->contains("https://t.co");
+    return strpos($this->text, "(cont)") !== false && strpos($this->text, "https://t.co") !== false;
   }
   
   /**
@@ -30,8 +57,10 @@ class CorpoelecTweet extends Tweet
   *
   * @return boolean
   */
-  public function contains(string $needle): bool
+  public function contains(string $needle, bool $caseSensitive = false): bool
   {
-    return false !== strpos($this->text, $needle);
+    $text = $this->fullText ?? $this->text;
+    
+    return false !== ($caseSensitive ? strpos($text, $needle) : stripos($text, $needle));
   }
 }
