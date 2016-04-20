@@ -10,8 +10,9 @@ namespace Luz\Region;
 
 use Luz\Twitter\TweetManager;
 use Luz\Twitter\Timeline\Timeline;
-use Luz\Twitter\Tweet\TweetBuilder;
 use Luz\Region\Timeline\RegionTimeline;
+use Luz\Blackout\Announcement\Analyzer\TweetAnalyzer;
+use Luz\Blackout\Announcement\CorpoelecTweet;
 
 /**
  * Takes care of generating timelines for a specific region
@@ -58,17 +59,31 @@ class TwitterMapper extends TweetManager
   */
   public function getTimeline(string $regionName, int $count = 25): Timeline
   {
-    $regionTl = new RegionTimeline;
+    $analyzer = new TweetAnalyzer();
+    $regionTl = new RegionTimeline();
+    
     $regionTwitter = $this->getRegionTwitter($regionName);
     
     if('' === $regionTwitter) {
       throw new \Exception('Region name could not be found', 404);
     }
     
-    $tweets = is_array($regionTwitter) ? $this->mergeUserTweets($regionTwitter) : $this->fetchUserTweets($regionTwitter);
+    $params = [
+      'count' => $count,
+    ];
     
-    foreach($tweets as $tweet) {
-      $regionTl->appendTweet(TweetBuilder::buildFromObject($tweet));
+    $tweets = is_array($regionTwitter) ? $this->mergeUserTweets($regionTwitter, $params) : $this->fetchUserTweets($regionTwitter, $params);
+    
+    foreach($tweets as $_tweet) {
+      $tweet = CorpoelecTweetBuilder::buildFromObject($_tweet);
+
+      if($analyzer->isAnnouncement($tweet)) {
+        $regionTl->prependTweet($tweet);
+      }elseif ($analyzer->isGarbage()) {
+        continue;
+      }else {
+        $regionTl->appendTweet($tweet);
+      }
     }
     
     return $regionTl;

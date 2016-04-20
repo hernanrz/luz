@@ -13,7 +13,7 @@ use Luz\Twitter\Tweet\Tweet;
 /**
 * Timeline object, provides access to a collection of tweets
 */
-class Timeline extends TimelineIterator
+class Timeline extends TimelineIterator implements \JsonSerializable
 {
   /**
   * Appends a Tweet to the timeline
@@ -50,5 +50,13 @@ class Timeline extends TimelineIterator
   {
     unset($this->tweets[$index]);
     $this->count--;
+  }
+  
+  /**
+  * serialize the timeline
+  */
+  public function jsonSerialize()
+  {
+    return $this->tweets;
   }
 }

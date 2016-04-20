@@ -75,6 +75,6 @@ class Scraper extends Client
     
     $this->DOM->validateOnParse = true;
     
-    $this->DOM->loadHTML($source);
+    @$this->DOM->loadHTML($source);
   }
 }

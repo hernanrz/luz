@@ -42,11 +42,11 @@ class TweetBuilder implements TweetBuilderInterface
   */
   public static function buildFromArray(array $src): Tweet
   {
-    $tweet = self::createTweet();
+    $tweet = static::createTweet();
     
     $tweet->setAuthor($src['user']['screen_name'])
           ->setText($src['text'])
-          ->setUrls(self::extractExpandedUrls($src['urls']));
+          ->setUrls(static::extractExpandedUrls($src['urls']));
     
     return $tweet;
   }
@@ -56,13 +56,13 @@ class TweetBuilder implements TweetBuilderInterface
   */
   public static function buildFromObject(\StdClass $src): Tweet
   {
-    $tweet = self::createTweet();
+    $tweet = static::createTweet();
     
     $tweet = $tweet->setAuthor($src->user->screen_name)
                    ->setText($src->text);
                    
     if(!empty($src->entities->urls)) {
-      $tweet->setUrls(self::extractExpandedUrls($src->entities->urls));
+      $tweet->setUrls(static::extractExpandedUrls($src->entities->urls));
     }               
     
     return $tweet;
